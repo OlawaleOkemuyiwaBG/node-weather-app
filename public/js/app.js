@@ -1,5 +1,3 @@
-console.log("client-side javascript is loaded");
-
 const form = document.querySelector(".form");
 const locationParagraph = document.querySelector(".location");
 const forecastParagraph = document.querySelector(".forecast");
