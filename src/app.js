@@ -6,26 +6,27 @@ const hbs = require("hbs");
 const forecast = require("./utils/forecast");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; //the port set from heroku or just port 3000
 
 //Define paths for express config
-const publicDirectoryPath = path.join(__dirname, "../public");
+const publicDirectoryPath = path.join(__dirname, "../public"); //__dirname is an inbuilt node variable which is the directory path of the current script i.e app.js
 const customViewsDirectory = path.join(__dirname, "../templates/views");
-const partialDirectory = path.join(__dirname, "../templates/partials");
+const partialsDirectory = path.join(__dirname, "../templates/partials");
 
-//Set up static directory to serve
+//Set up static directory to serve i.e the public diretory
 app.use(express.static(publicDirectoryPath));
 
-//Setup handlebars engine and customize a path for it instead of the default root views directory
+//Setup handlebars engine to render dynamic pages(views) using templating
 app.set("view engine", "hbs");
+//customize the location of views directory instead of it being mandatorily in the project root directory
 app.set("views", customViewsDirectory);
 
 //Register hbs partials
-hbs.registerPartials(partialDirectory);
+hbs.registerPartials(partialsDirectory);
 
 app.get("", (req, res) => {
-  //res.send() is used to send back a regular string, an HTML, an array/object(they are automatically converted to JSON).
-  //But if we wish to render one of our views (index.hbs handlerbar template) in which we've configured express to use the view engine - hbs, the render method is used instead.
+  //res.send() is used to send back a regular string text, an HTML, an array/object (they are automatically converted to JSON).
+  //But if we wish to render one of our views (in this instance index.hbs handlerbar template) the render method is used instead.
   res.render("index", {
     title: "Weather",
     name: "Olawale Okemuyiwa",
@@ -48,7 +49,7 @@ app.get("/help", (req, res) => {
 });
 
 app.get("/weather", async (req, res) => {
-  //this is sort of our own API used to send forecast data JSON back when a get request is sent to the URL (localhost:3000/weather?...)
+  //this is sort of our own custom RESTFUL API which internally makes use of 2 APIs to get forecast data of an address and then sends back the data as JSON just like regular APIs when an http request is sent to it (i.e when http request is sent to localhost:3000/weather?address=lagos)
   const address = req.query.address;
   if (!address) {
     res.send({
@@ -57,13 +58,9 @@ app.get("/weather", async (req, res) => {
     return;
   }
 
-  const { location, forecastMessage } = await forecast(address);
+  const forecastData = await forecast(address);
 
-  res.send({
-    address,
-    forecastMessage,
-    location,
-  });
+  res.send(forecastData);
 });
 
 app.get("/help/*", (req, res) => {

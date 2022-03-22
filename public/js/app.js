@@ -3,11 +3,14 @@ const locationParagraph = document.querySelector(".location");
 const forecastParagraph = document.querySelector(".forecast");
 
 form.addEventListener("submit", event => {
+  console.log("client-side JS");
+
   event.preventDefault();
   locationParagraph.textContent = "";
   forecastParagraph.textContent = "";
 
   const location = document.querySelector(".input").value;
+
   if (!location || location.trim().length === 0) {
     alert("You must enter an address");
     return;
@@ -15,7 +18,7 @@ form.addEventListener("submit", event => {
 
   forecastParagraph.textContent = "Loading...";
 
-  fetch(`/weather?address=${location}`)
+  fetch(`/weather?address=${location}`) //sending an http request to the restful API built by us
     .then(response => response.json())
     .then(data => {
       if (data.error) {

@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 
 const getLocationData = require("./geo-code");
 
-//To get the weather info of a location based on its geographical coordinates(Long&Lat)
+//To get the weather info of a location based on its geographical coordinates(Long&Lat gotten from its inner geeo-code function)
 const getWeatherInfo = async place => {
   try {
     const { lattitude, longitude, location } = await getLocationData(place);
